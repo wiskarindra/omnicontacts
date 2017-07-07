@@ -13,7 +13,7 @@ module OmniContacts
         super *args
         @auth_host = 'graph.facebook.com'
         @authorize_path = '/oauth/authorize'
-        @scope = 'email,user_relationships,user_birthday,user_friends'
+        @scope = 'email,user_relationships,user_friends'
         @auth_token_path = '/oauth/access_token'
         @contacts_host = 'graph.facebook.com'
         @friends_path = '/v2.5/me/friends'
@@ -29,10 +29,10 @@ module OmniContacts
         spouse_response = nil
         if spouse_id
           spouse_path = "/#{spouse_id}"
-          spouse_response = https_get(@contacts_host, spouse_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,birthday,picture'})
+          spouse_response = https_get(@contacts_host, spouse_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,picture'})
         end
-        family_response = https_get(@contacts_host, @family_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,birthday,picture,relationship'})
-        friends_response = https_get(@contacts_host, @friends_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,birthday,picture'})
+        family_response = https_get(@contacts_host, @family_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,picture,relationship'})
+        friends_response = https_get(@contacts_host, @friends_path, {:access_token => access_token, :fields => 'first_name,last_name,name,id,gender,picture'})
         contacts_from_response(spouse_response, family_response, friends_response)
       end
 
@@ -80,14 +80,13 @@ module OmniContacts
 
       def create_contact_element contact_info
         # creating nil fields to keep the fields consistent across other networks
-        contact = {:id => nil, :first_name => nil, :last_name => nil, :name => nil, :email => nil, :gender => nil, :birthday => nil, :profile_picture=> nil, :relation => nil}
+        contact = {:id => nil, :first_name => nil, :last_name => nil, :name => nil, :email => nil, :gender => nil, :profile_picture=> nil, :relation => nil}
         contact[:id] = contact_info['id']
         contact[:first_name] = normalize_name(contact_info['first_name'])
         contact[:last_name] = normalize_name(contact_info['last_name'])
         contact[:name] = contact_info['name']
         contact[:email] = contact_info['email']
         contact[:gender] = contact_info['gender']
-        contact[:birthday] = birthday(contact_info['birthday'])
         contact[:profile_picture] = image_url(contact_info['id'])
         contact[:relation] = contact_info['relationship']
         contact
@@ -111,7 +110,7 @@ module OmniContacts
         return nil if me.nil?
         user = {:id => me['id'], :email => me['email'],
                 :name => me['name'], :first_name => normalize_name(me['first_name']),
-                :last_name => normalize_name(me['last_name']), :birthday => birthday(me['birthday']),
+                :last_name => normalize_name(me['last_name']),
                 :gender => me['gender'], :profile_picture => image_url(me['id'])
         }
         user
