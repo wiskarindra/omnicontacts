@@ -2,6 +2,7 @@ module OmniContacts
   module Importer
 
     autoload :Gmail, "omnicontacts/importer/gmail"
+    autoload :FriendshipGmail, "omnicontacts/importer/friendship_gmail"
     autoload :Yahoo, "omnicontacts/importer/yahoo"
     autoload :Hotmail, "omnicontacts/importer/hotmail"
     autoload :Outlook, "omnicontacts/importer/outlook"
